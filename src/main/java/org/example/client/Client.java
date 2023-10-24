@@ -10,31 +10,40 @@ public class Client extends Thread{
     private static BufferedWriter out;
 
     public Client(String address, int port){
-        try {
             try {
                 serverSocket = new Socket(address, port);
                 reader = new BufferedReader(new InputStreamReader(System.in));
                 input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
                 out = new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
+                write();
+            } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
 
+    public void write(){
+            try {
+
+                out.write("New client connected");
+                out.flush();
                 start();
                 String text = "";
-                while (!text.equals("exit")){
+                while (!text.equals("exit")) {
                     text = reader.readLine();
-                    System.out.println("1:"+text);
+                    System.out.println("1:" + text);
                     out.write(text + "\n");
                     out.flush();
                 }
-            } finally {
                 System.out.println("Client is closing...");
                 serverSocket.close();
                 input.close();
                 out.close();
+
+                }catch (IOException e) {
+                System.err.println(e);
             }
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-    }
+                }
+
 
     @Override
     public void run() {
@@ -47,4 +56,6 @@ public class Client extends Thread{
             System.err.println(e);
         }
     }
-}
+
+
+    }

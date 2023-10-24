@@ -3,7 +3,6 @@ package org.example.server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Server {
@@ -22,6 +21,7 @@ public class Server {
                 while(true) {
                     Socket clientSocket = serverSocket.accept();
                     clientsList.add(new ServerConnection(clientSocket, this));
+                    if(clientsList.size() == 0) break;
                 }
             } finally {
                 System.out.println("Server closing...");
@@ -33,9 +33,10 @@ public class Server {
     }
 
     public void sendMessage(String message){
-        for(ServerConnection sc : clientsList){
-            System.out.println(sc.clientSocket);
-            sc.send(message);
+        for(int i = 0; i < clientsList.size(); i ++){
+//        for(ServerConnection sc : clientsList){
+            System.out.println(clientsList.get(i).clientSocket);
+            clientsList.get(i).send(message);
         }
     }
 }

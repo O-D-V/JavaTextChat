@@ -45,6 +45,7 @@ public class ServerConnection extends Thread{
             out.write(msg + "\n");
             out.flush();
         } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
