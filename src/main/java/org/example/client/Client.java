@@ -23,25 +23,23 @@ public class Client extends Thread{
 
     public void write(){
             try {
-
-                out.write("New client connected" + "\n");
-                out.flush();
-                start();
-                String text = "";
-                while (!text.equals("exit")) {
-                    text = reader.readLine();
-                    out.write(text + "\n");
+                try {
+                    out.write("New client connected" + "\n");
                     out.flush();
+                    start();
+                    String text = "";
+                    while (!text.equals("/exit")) {
+                        text = reader.readLine();
+                        out.write(text + "\n");
+                        out.flush();
+                    }
+                } finally {
+                    System.out.println("Client is closing...");
                 }
-                System.out.println("Client is closing...");
-                serverSocket.close();
-                input.close();
-                out.close();
-
-                }catch (IOException e) {
+            }catch (IOException e) {
                 System.err.println(e);
             }
-                }
+    }
 
 
     @Override
@@ -49,8 +47,13 @@ public class Client extends Thread{
         try {
             while (true) {
                 String serverWord = input.readLine();
+                if (serverWord.equals("/exit")) break;
                 System.out.println(serverWord);
             }
+            serverSocket.close();
+            input.close();
+            out.close();
+            reader.close();
         }catch (IOException e) {
             System.err.println(e);
         }

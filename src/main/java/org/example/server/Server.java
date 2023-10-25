@@ -8,9 +8,7 @@ import java.util.LinkedList;
 public class Server {
     private  ServerSocket serverSocket;
     public LinkedList<ServerConnection> clientsList;
-//    public static ArrayList<ServerConnection> clientsList;
 
-    //  TODO  Delete connections from server when exit
     public Server(){
         waitConnections();
     }
@@ -33,6 +31,10 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void deleteConnection(ServerConnection sc){
+        clientsList.remove(sc);
     }
 
     public LinkedList<ServerConnection> getClientsList(){

@@ -27,8 +27,12 @@ public class ServerConnection extends Thread{
         try{
             try {
                 String message = "";
-                while (!message.equals("/close")) {
+                while (true) {
                     message = in.readLine();
+                    if(message.equals("/exit")){
+                        System.out.println("Client disconected");
+                        return;
+                    }
                     System.out.println(message);
                     LinkedList<ServerConnection> list =  serverSocket.getClientsList();
                     for(ServerConnection sc : list){
@@ -37,6 +41,10 @@ public class ServerConnection extends Thread{
                     }
                 }
             }finally{
+                serverSocket.deleteConnection(this);
+                send("/exit");
+                out.close();
+                in.close();
                 clientSocket.close();
             }
         }catch (IOException e) {
