@@ -8,6 +8,8 @@ public class Client extends Thread{
     private  BufferedReader reader;
     private  BufferedReader input;
     private  BufferedWriter out;
+    ObjectOutputStream objOut;
+    ObjectInputStream objIn;
 
     public Client(String address, int port){
             try {
@@ -15,6 +17,9 @@ public class Client extends Thread{
                 reader = new BufferedReader(new InputStreamReader(System.in));
                 input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
                 out = new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
+                objOut = new ObjectOutputStream(serverSocket.getOutputStream());
+                objIn = new ObjectInputStream(serverSocket.getInputStream());
+
                 write();
             } catch (IOException e) {
             System.err.println(e);
