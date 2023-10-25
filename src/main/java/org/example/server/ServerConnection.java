@@ -2,10 +2,11 @@ package org.example.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class ServerConnection extends Thread{
-    private static BufferedReader in;
-    private static BufferedWriter out;
+    private  BufferedReader in;
+    private  BufferedWriter out;
     Socket clientSocket;
     Server serverSocket;
     ServerConnection(Socket clientSocket, Server serverSocket){
@@ -28,8 +29,12 @@ public class ServerConnection extends Thread{
                 String message = "";
                 while (!message.equals("/close")) {
                     message = in.readLine();
-                    System.out.println("2:" + message);
-                    serverSocket.sendMessage(message);
+                    System.out.println(message);
+                    LinkedList<ServerConnection> list =  serverSocket.getClientsList();
+                    for(ServerConnection sc : list){
+                        if (sc.equals(this)) continue;
+                        sc.send(message);
+                    }
                 }
             }finally{
                 clientSocket.close();
@@ -41,7 +46,6 @@ public class ServerConnection extends Thread{
 
     public void send(String msg) {
         try {
-            System.out.println("3:" + msg);
             out.write(msg + "\n");
             out.flush();
         } catch (IOException e) {

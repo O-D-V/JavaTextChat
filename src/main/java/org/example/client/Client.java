@@ -4,10 +4,10 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client extends Thread{
-    private static Socket serverSocket;
-    private static BufferedReader reader;
-    private static BufferedReader input;
-    private static BufferedWriter out;
+    private  Socket serverSocket;
+    private  BufferedReader reader;
+    private  BufferedReader input;
+    private  BufferedWriter out;
 
     public Client(String address, int port){
             try {
@@ -24,13 +24,12 @@ public class Client extends Thread{
     public void write(){
             try {
 
-                out.write("New client connected");
+                out.write("New client connected" + "\n");
                 out.flush();
                 start();
                 String text = "";
                 while (!text.equals("exit")) {
                     text = reader.readLine();
-                    System.out.println("1:" + text);
                     out.write(text + "\n");
                     out.flush();
                 }

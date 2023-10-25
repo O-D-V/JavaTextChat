@@ -6,14 +6,17 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 public class Server {
-    private static ServerSocket serverSocket;
-    public static LinkedList<ServerConnection> clientsList;
+    private  ServerSocket serverSocket;
+    public LinkedList<ServerConnection> clientsList;
 //    public static ArrayList<ServerConnection> clientsList;
 
     //  TODO  Delete connections from server when exit
     public Server(){
+        waitConnections();
+    }
+
+    public void waitConnections(){
         clientsList = new LinkedList<>();
-//        clientsList = new ArrayList<>();
         try {
             try {
                 serverSocket = new ServerSocket(4004);
@@ -32,11 +35,7 @@ public class Server {
         }
     }
 
-    public void sendMessage(String message){
-        for(int i = 0; i < clientsList.size(); i ++){
-//        for(ServerConnection sc : clientsList){
-            System.out.println(clientsList.get(i).clientSocket);
-            clientsList.get(i).send(message);
-        }
+    public LinkedList<ServerConnection> getClientsList(){
+        return clientsList;
     }
 }
