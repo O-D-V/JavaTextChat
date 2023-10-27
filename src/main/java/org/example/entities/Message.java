@@ -2,7 +2,7 @@ package org.example.entities;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public class Message implements Serializable{
     private String text;
     private String senderNickname;
 
@@ -28,6 +28,11 @@ public class Message implements Serializable {
 
     public void setSenderNickname(String senderNickname) {
         this.senderNickname = senderNickname;
+    }
+
+    @Override
+    public String toString() {
+        return senderNickname + ":" + text;
     }
 
 }

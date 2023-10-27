@@ -10,8 +10,13 @@ public class Client extends Thread{
     private  BufferedWriter out;
     ObjectOutputStream objOut;
     ObjectInputStream objIn;
-
+    String name;
+    org.slf4j.Logger logger;
     public Client(String address, int port){
+        logger = org.slf4j.LoggerFactory.getLogger(Client.class);
+        //PropertyConfigurator.configure("log4j.conf");
+        logger.error("ЕТСТ");
+        logger.info("Hi");
             try {
                 serverSocket = new Socket(address, port);
                 reader = new BufferedReader(new InputStreamReader(System.in));
@@ -19,9 +24,17 @@ public class Client extends Thread{
                 out = new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
                 objOut = new ObjectOutputStream(serverSocket.getOutputStream());
                 objIn = new ObjectInputStream(serverSocket.getInputStream());
-
                 write();
             } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
+
+    public void askName(){
+        System.out.println("Enter your name:");
+        try {
+            name = reader.readLine();
+        }catch (IOException e){
             System.err.println(e);
         }
     }
