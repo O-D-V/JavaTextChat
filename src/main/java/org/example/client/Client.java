@@ -14,7 +14,7 @@ public class Client extends Thread{
     org.slf4j.Logger logger;
     public Client(String address, int port){
         logger = org.slf4j.LoggerFactory.getLogger(Client.class);
-        //PropertyConfigurator.configure("log4j.conf");
+        //PropertyConfigurator.configure("log4j.properties");
         logger.error("ЕТСТ");
         logger.info("Hi");
             try {
