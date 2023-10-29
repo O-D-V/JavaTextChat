@@ -26,7 +26,8 @@ public class Client extends Thread{
                 objIn = new ObjectInputStream(serverSocket.getInputStream());
                 write();
             } catch (IOException e) {
-            System.err.println(e);
+                logger.error("Client closed with: ",e);
+                System.err.println(e);
         }
     }
 
