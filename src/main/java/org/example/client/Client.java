@@ -1,5 +1,7 @@
 package org.example.client;
 
+import org.example.entities.Message;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -14,20 +16,18 @@ public class Client extends Thread{
     org.slf4j.Logger logger;
     public Client(String address, int port){
         logger = org.slf4j.LoggerFactory.getLogger(Client.class);
-        //PropertyConfigurator.configure("log4j.properties");
-        logger.error("ЕТСТ");
-        logger.info("Hi");
-            try {
-                serverSocket = new Socket(address, port);
-                reader = new BufferedReader(new InputStreamReader(System.in));
-                input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
-                out = new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
-                objOut = new ObjectOutputStream(serverSocket.getOutputStream());
-                objIn = new ObjectInputStream(serverSocket.getInputStream());
-                write();
-            } catch (IOException e) {
-                logger.error("Client closed with: ",e);
-                System.err.println(e);
+        logger.info("The client is up and running");
+        try {
+            serverSocket = new Socket(address, port);
+            reader = new BufferedReader(new InputStreamReader(System.in));
+            input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
+            objOut = new ObjectOutputStream(serverSocket.getOutputStream());
+            objIn = new ObjectInputStream(serverSocket.getInputStream());
+            write();
+        } catch (IOException e) {
+            logger.error("Client closed with:",e);
+            System.err.println(e);
         }
     }
 
@@ -36,6 +36,7 @@ public class Client extends Thread{
         try {
             name = reader.readLine();
         }catch (IOException e){
+            logger.error("Name is not entered:",e);
             System.err.println(e);
         }
     }
@@ -43,19 +44,21 @@ public class Client extends Thread{
     public void write(){
             try {
                 try {
-                    out.write("New client connected" + "\n");
-                    out.flush();
                     start();
+                    askName();
+                    objOut.writeObject(new Message("new user connected", name));
+                    out.flush();
                     String text = "";
                     while (!text.equals("/exit")) {
                         text = reader.readLine();
-                        out.write(text + "\n");
+                        objOut.writeObject(new Message(text,name));
                         out.flush();
                     }
                 } finally {
-                    System.out.println("Client is closing...");
+                    logger.info("Client is closing");
                 }
             }catch (IOException e) {
+                logger.error("Client closed with:",e);
                 System.err.println(e);
             }
     }
@@ -64,16 +67,20 @@ public class Client extends Thread{
     @Override
     public void run() {
         try {
+            try{
             while (true) {
                 String serverWord = input.readLine();
                 if (serverWord.equals("/exit")) break;
                 System.out.println(serverWord);
+            }}finally {
+                serverSocket.close();
+                input.close();
+                out.close();
+                reader.close();
+                logger.info("The server has terminated the connection");
             }
-            serverSocket.close();
-            input.close();
-            out.close();
-            reader.close();
         }catch (IOException e) {
+            logger.error("Client read-thread closed with: ",e);
             System.err.println(e);
         }
     }

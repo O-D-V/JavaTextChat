@@ -1,5 +1,8 @@
 package org.example.server;
 
+import org.example.client.Client;
+import org.example.entities.Message;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -9,14 +12,22 @@ public class ServerConnection extends Thread{
     private  BufferedWriter out;
     Socket clientSocket;
     Server serverSocket;
+    ObjectOutputStream objOut;
+    ObjectInputStream objIn;
+    org.slf4j.Logger logger;
+
     ServerConnection(Socket clientSocket, Server serverSocket){
+        logger = org.slf4j.LoggerFactory.getLogger(ServerConnection.class);
         this.serverSocket = serverSocket;
         this.clientSocket = clientSocket;
         try {
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            objOut = new ObjectOutputStream(clientSocket.getOutputStream());
+            objIn = new ObjectInputStream(clientSocket.getInputStream());
 
         } catch (IOException e) {
+            logger.error("Server connection error:", e);
             throw new RuntimeException(e);
         }
         start();
@@ -26,28 +37,29 @@ public class ServerConnection extends Thread{
     public void run() {
         try{
             try {
-                String message = "";
+                Message message;
                 while (true) {
-                    message = in.readLine();
-                    if(message.equals("/exit")){
-                        System.out.println("Client disconected");
+                    message = (Message) objIn.readObject();
+                    if(message.getText().equals("/exit")){
+                        logger.info("Server connection is closing...");
                         return;
                     }
                     System.out.println(message);
                     LinkedList<ServerConnection> list =  serverSocket.getClientsList();
                     for(ServerConnection sc : list){
                         if (sc.equals(this)) continue;
-                        sc.send(message);
+                        sc.send(message.toString());
                     }
                 }
-            }finally{
+            } finally{
                 serverSocket.deleteConnection(this);
                 send("/exit");
                 out.close();
                 in.close();
                 clientSocket.close();
             }
-        }catch (IOException e) {
+        }catch (ClassNotFoundException|IOException e) {
+            logger.error("Server connection error:", e);
             throw new RuntimeException(e);
         }
     }
@@ -57,6 +69,7 @@ public class ServerConnection extends Thread{
             out.write(msg + "\n");
             out.flush();
         } catch (IOException e) {
+            logger.error("Server connection error:", e);
             throw new RuntimeException(e);
         }
     }
