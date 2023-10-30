@@ -1,6 +1,5 @@
 package org.example.server;
 
-import org.example.client.Client;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -17,6 +16,8 @@ public class Server {
         waitConnections();
     }
 
+    //TODO save history in database
+    //TODO server_close method
     public void waitConnections(){
         clientsList = new LinkedList<>();
         try {
@@ -35,6 +36,18 @@ public class Server {
         } catch (IOException e) {
             logger.error("Server is closed with:", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    public void closeServer(){
+        try {
+            serverSocket.close();
+        }catch(IOException e){
+                logger.error("Server close error:", e);
+                throw new RuntimeException(e);
+            }
+        for (ServerConnection sc:clientsList){
+            sc.closeConnection();
         }
     }
 

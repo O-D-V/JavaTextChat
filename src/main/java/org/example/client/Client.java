@@ -77,6 +77,8 @@ public class Client extends Thread{
                 input.close();
                 out.close();
                 reader.close();
+                objIn.close();
+                objOut.close();
                 logger.info("The server has terminated the connection");
             }
         }catch (IOException e) {

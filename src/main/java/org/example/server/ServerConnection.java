@@ -1,6 +1,5 @@
 package org.example.server;
 
-import org.example.client.Client;
 import org.example.entities.Message;
 
 import java.io.*;
@@ -8,8 +7,8 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 public class ServerConnection extends Thread{
-    private  BufferedReader in;
-    private  BufferedWriter out;
+    private final BufferedReader in;
+    private final BufferedWriter out;
     Socket clientSocket;
     Server serverSocket;
     ObjectOutputStream objOut;
@@ -33,6 +32,22 @@ public class ServerConnection extends Thread{
         start();
     }
 
+    public void closeConnection(){
+        serverSocket.deleteConnection(this);
+        send("/exit");
+        try {
+            out.close();
+            in.close();
+            clientSocket.close();
+            objIn.close();
+            objOut.close();
+
+        }catch (IOException e){
+            logger.error("Server connection error:", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void run() {
         try{
@@ -52,11 +67,7 @@ public class ServerConnection extends Thread{
                     }
                 }
             } finally{
-                serverSocket.deleteConnection(this);
-                send("/exit");
-                out.close();
-                in.close();
-                clientSocket.close();
+                closeConnection();
             }
         }catch (ClassNotFoundException|IOException e) {
             logger.error("Server connection error:", e);
