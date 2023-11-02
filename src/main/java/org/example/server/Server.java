@@ -17,7 +17,8 @@ public class Server {
     }
 
     //TODO save history in database
-    //TODO server_close method
+    //TODO save hash of password and login in DB
+    //TODO save path of image
     public void waitConnections(){
         clientsList = new LinkedList<>();
         try {
@@ -43,7 +44,7 @@ public class Server {
         try {
             serverSocket.close();
         }catch(IOException e){
-                logger.error("Server close error:", e);
+                logger.error("Server close with error:", e);
                 throw new RuntimeException(e);
             }
         for (ServerConnection sc:clientsList){

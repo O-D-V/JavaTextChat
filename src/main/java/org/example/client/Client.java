@@ -1,6 +1,7 @@
 package org.example.client;
 
 import org.example.entities.Message;
+import org.example.server.DB_adapter;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,6 +18,7 @@ public class Client extends Thread{
     public Client(String address, int port){
         logger = org.slf4j.LoggerFactory.getLogger(Client.class);
         logger.info("The client is up and running");
+        DB_adapter ad = new DB_adapter();
         try {
             serverSocket = new Socket(address, port);
             reader = new BufferedReader(new InputStreamReader(System.in));
