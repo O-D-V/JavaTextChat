@@ -1,4 +1,4 @@
-package org.example.entities;
+package org.entities;
 
 import java.io.Serializable;
 
@@ -6,12 +6,14 @@ public class Message implements Serializable{
     private String text;
     private String senderNickname;
 
+    private java.time.LocalDateTime dateTime;
     public Message() {
     }
 
-    public Message(String text, String senderNickname) {
+    public Message(String text, String senderNickname, java.time.LocalDateTime dateTime) {
         this.text = text;
         this.senderNickname = senderNickname;
+        this.dateTime = dateTime;
     }
 
     public String getText() {

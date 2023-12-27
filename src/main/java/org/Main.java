@@ -1,7 +1,7 @@
-package org.example;
+package org;
 
-import org.example.client.Client;
-import org.example.server.Server;
+import org.client.Client;
+import org.server.Server;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,5 +12,6 @@ public class Main {
                 System.out.println("Клиент запущен");
                 Client client = new Client("localhost", 4004);
         }
+
     }
     }
