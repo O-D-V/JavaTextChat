@@ -16,6 +16,9 @@ import java.time.Clock;
 import java.time.ZoneId;
 import java.util.Scanner;
 
+//TODO Добавить возможность менять имя
+//TODO Добавить логины и пароли
+
 public class Client extends Thread{
     public SocketChannel channel;
 
@@ -25,9 +28,12 @@ public class Client extends Thread{
     final int PORT = 4004;
     org.slf4j.Logger logger;
     MainFrame mainWindow;
+    ObjectMapper objectMapper = new ObjectMapper();
+
 
     private String name;
     public Client(String address, int port){
+        objectMapper.registerModule(new JavaTimeModule());
         logger = org.slf4j.LoggerFactory.getLogger(Client.class);
         try {
             server = SocketChannel.open(new InetSocketAddress(HOSTNAME, PORT));
@@ -73,8 +79,6 @@ public class Client extends Thread{
     }
 
     private String messageObjtoJSONstring(Message message){
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
         String json = "";
         try {
             json = objectMapper.writeValueAsString(message);
@@ -98,8 +102,6 @@ public class Client extends Thread{
     @Override
     public void run() {
         Selector selector;
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
         ByteBuffer buffer;
         try {
             try{

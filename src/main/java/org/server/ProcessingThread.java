@@ -10,6 +10,9 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+
+//This thread is sending messages to other users and to database
+
 public class ProcessingThread extends Thread{
     org.slf4j.Logger logger;
     Server server;
