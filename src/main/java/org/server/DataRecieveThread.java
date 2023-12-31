@@ -1,6 +1,7 @@
 package org.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.entities.Message;
 
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class DataRecieveThread extends Thread{
                     key = iterator.next();
                     iterator.remove();
                     ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.registerModule(new JavaTimeModule());
                     SocketChannel client = ((SocketChannel) key.channel());
                     String JSONmessage = "";
 

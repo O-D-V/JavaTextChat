@@ -1,6 +1,7 @@
 package org.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.client.view.MainFrame;
 import org.client.view.MainPanel;
 import org.entities.Message;
@@ -36,8 +37,8 @@ public class Client extends Thread{
         }
         reader =  new Scanner(System.in);
         logger.info("The client is up and running");
-        start();
         mainWindow = new MainFrame(this);
+        start();
     }
 
     public void setClientName(String name){
@@ -63,7 +64,7 @@ public class Client extends Thread{
             sizeBuffer.clear();
             //buffer.flip();
             server.write(buffer);
-            logger.debug("End of write");
+            logger.info("End of write");
         }catch (IOException e) {
                 logger.error("Client closed with:",e);
                 System.err.println(e);
@@ -73,6 +74,7 @@ public class Client extends Thread{
 
     private String messageObjtoJSONstring(Message message){
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String json = "";
         try {
             json = objectMapper.writeValueAsString(message);
@@ -97,6 +99,7 @@ public class Client extends Thread{
     public void run() {
         Selector selector;
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         ByteBuffer buffer;
         try {
             try{
@@ -117,7 +120,7 @@ public class Client extends Thread{
                     }
                     buffer.clear();
                     String msg = BBtoString(buffer);
-                    logger.info(msg);
+                    logger.info("recieved:" + msg);
                     Message mes = objectMapper.readValue(msg, Message.class);
                     mainWindow.updateChat(mes);
                 }

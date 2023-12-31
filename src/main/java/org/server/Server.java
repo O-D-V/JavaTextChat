@@ -14,10 +14,12 @@ public class Server {
     public LinkedList<SocketChannel> clientsList;
     public LinkedList<Message> messagesList;
     org.slf4j.Logger logger;
+    DB_adapter database;
     final String HOSTNAME = "localhost";
     final int PORT = 4004;
     final int THREAD_NUMBER = 1;
     public Server(){
+        database = new DB_adapter();
         clientsList = new LinkedList<>();
         messagesList = new LinkedList<>();
         logger = org.slf4j.LoggerFactory.getLogger(Server.class);
@@ -45,6 +47,14 @@ public class Server {
         for(int i = 0; i < THREAD_NUMBER; i++){
             new ProcessingThread(this);
         }
+    }
+
+    public DB_adapter getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(DB_adapter database) {
+        this.database = database;
     }
 
     public void addMessage(Message message){

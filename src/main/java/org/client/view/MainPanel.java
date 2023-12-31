@@ -66,14 +66,14 @@ public MainFrame parentFrame;
     }
 
     public void addText(){
-        String str = smallField.getText()+'\n';
-        textWindow.append(str);
+        String str = smallField.getText();
+        //textWindow.append("\n" + str);
         parentFrame.write(str);
         smallField.setText("");
     }
 
     public void updateChat(Message message){
-        textWindow.append(message.getSenderNickname() + ":" + message.getText());
+        textWindow.append("\n" + message.getSenderNickname() + ":" + message.getText());
     }
 
 }

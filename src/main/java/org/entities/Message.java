@@ -1,6 +1,7 @@
 package org.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class Message implements Serializable{
     private String text;
@@ -13,6 +14,14 @@ public class Message implements Serializable{
     public Message(String text, String senderNickname, java.time.LocalDateTime dateTime) {
         this.text = text;
         this.senderNickname = senderNickname;
+        this.dateTime = dateTime;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
